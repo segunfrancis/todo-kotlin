@@ -19,8 +19,11 @@ import viewmodel.VComponent
 
 @JsExport
 class TodoApp private constructor() : VComponent<RProps, Intent, State, TodoViewModel>() {
-    override val viewModel by lazy { TodoViewModel() }
+
     private var watch1: Watcher<State>? = null
+
+    override val viewModel by lazy { TodoViewModel() }
+
     override fun componentDidMount() {
         super.componentDidMount()
         watch1 = viewModel.state.watch { setState { ui = it } }
