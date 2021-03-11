@@ -65,13 +65,15 @@ class TodoActivity : AppCompatActivity() {
     }
 
     fun Todo.view(): View {
-        val view = LayoutInflater.from(this@TodoActivity).inflate(R.layout.todo_view, container, false)
+        val view =
+            LayoutInflater.from(this@TodoActivity).inflate(R.layout.todo_view, container, false)
         val textView = view.findViewById<TextView>(R.id.details)
         textView.text = details
         view.findViewById<CheckBox>(R.id.checkBox).apply {
             isChecked = completed
             setOnCheckedChangeListener { _, isChecked ->
-                val i = if (isChecked) Intent.Complete(this@view.uid) else Intent.UnComplete(this@view.uid)
+                val i =
+                    if (isChecked) Intent.Complete(this@view.uid) else Intent.UnComplete(this@view.uid)
                 viewModel.post(i)
             }
         }

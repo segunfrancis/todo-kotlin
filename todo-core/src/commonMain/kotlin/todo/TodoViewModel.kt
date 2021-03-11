@@ -38,23 +38,24 @@ class TodoViewModel(
         is Intent.UnComplete -> setCompleteStatus(i, i.uid, completed = false)
     }
 
-    private fun CoroutineScope.setCompleteStatus(i: Intent, uid: Int?, completed: Boolean) = launch {
-        state.value = State.Loading("Setting completed=$completed")
-        flow<State> {
-            val id = uid ?: throw Exception("uid is null")
-            emit(State.Loading("Searching for todo with uid=$uid"))
-            val todo = service.load(id) ?: throw Exception("Todo(uid=$id) not found")
-            emit(State.Loading("Marking Todo(uid=$uid) as completed=$completed"))
-            val td = service.edit(todo.copy(completed = completed))
-            emit(State.Loading("Success"))
-        }.catch {
-            emit(State.Error(Exception("Failed to update todo", it), i))
-            delay(3000)
-        }.collect {
-            state.value = it
+    private fun CoroutineScope.setCompleteStatus(i: Intent, uid: Int?, completed: Boolean) =
+        launch {
+            state.value = State.Loading("Setting completed=$completed")
+            flow<State> {
+                val id = uid ?: throw Exception("uid is null")
+                emit(State.Loading("Searching for todo with uid=$uid"))
+                val todo = service.load(id) ?: throw Exception("Todo(uid=$id) not found")
+                emit(State.Loading("Marking Todo(uid=$uid) as completed=$completed"))
+                val td = service.edit(todo.copy(completed = completed))
+                emit(State.Loading("Success"))
+            }.catch {
+                emit(State.Error(Exception("Failed to update todo", it), i))
+                delay(3000)
+            }.collect {
+                state.value = it
+            }
+            loadTodos(Intent.LoadTodos)
         }
-        loadTodos(Intent.LoadTodos)
-    }
 
     private fun CoroutineScope.edit(i: Intent.Edit) = launch {
         state.value = State.Loading("Editing todo, please wait")
