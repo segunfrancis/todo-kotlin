@@ -30,7 +30,7 @@ jobs:
       name: Sign APK
       id: sign_app
       with:
-        releaseDirectory: todo-android/release
+        releaseDirectory: todo-android/build/outputs/apk/release
         signingKeyBase64: ${{ secrets.SIGNING_KEY }}
         alias: ${{ secrets.ALIAS }}
         keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
@@ -42,3 +42,13 @@ jobs:
       with:
         name: Signed app bundle
         path: ${{steps.sign_app.outputs.signedReleaseFile}}
+
+    - name: Create release and upload apk
+      uses: underwindfall/create-release-with-debugapk@v2.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+      with:
+        tag_name: v0.0.3
+        asset_path: todo-android/release/todo-android-debug.apk
+        asset_name: Todo-Kotlin.apk
+        asset_content_type: application/zip
