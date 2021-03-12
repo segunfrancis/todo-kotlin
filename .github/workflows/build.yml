@@ -42,13 +42,3 @@ jobs:
       with:
         name: Signed app bundle
         path: ${{steps.sign_app.outputs.signedReleaseFile}}
-
-    - name: Create release and upload apk
-      uses: underwindfall/create-release-with-debugapk@v2.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-      with:
-        tag_name: v0.0.3
-        asset_path: todo-android/release/todo-android-debug.apk
-        asset_name: Todo-Kotlin.apk
-        asset_content_type: application/zip
