@@ -8,6 +8,8 @@ android {
     configureAndroid("src/main")
     defaultConfig {
         minSdk = 21
+        versionCode(1)
+        versionName("1.0.0")
     }
 }
 
