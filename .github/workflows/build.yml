@@ -28,22 +28,13 @@ jobs:
       run: ./gradlew assembleRelease
       # 3
     - name: Sign APK
-      uses: r0adkll/sign-android-release@v1
-        # ID used to access action output
-      id: sign_app
+      uses: Tlaster/android-sign@v1
       with:
-        releaseDirectory: todo-android/release
+        releaseDirectory: todo-android/build/outputs/apk/release
         signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+        output: build/release/signed
         alias: ${{ secrets.ALIAS }}
         keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
         keyPassword: ${{ secrets.KEY_PASSWORD }}
-      # 4
-    - uses: actions/upload-artifact@master
-      with:
-        name: todo-android-release.apk
-        path: ${{steps.sign_app.outputs.signedReleaseFile}}
-      # 5
-    - uses: actions/upload-artifact@master
-      with:
-        name: mapping.txt
-        path: todo-android/release/mapping.txt
+      env:
+        BUILD_TOOL_VERSION: "30.0.2"
